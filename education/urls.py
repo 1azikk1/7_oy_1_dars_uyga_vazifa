@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (home, add_course, course_detail, student_detail, students_by_course, delete_course, update_course,
-                    user_logout, user_login, user_register)
+                    user_logout, user_login, user_register, error_404)
 
 urlpatterns = [
     path('', home, name='home'),
@@ -18,5 +18,8 @@ urlpatterns = [
     path('auth/register/', user_register, name='user_register'),
     path('auth/login/', user_login, name='user_login'),
     path('auth/logout/', user_logout, name='user_logout'),
+
+    #404
+    path('404/notfound/', error_404, name='404'),
 
 ]

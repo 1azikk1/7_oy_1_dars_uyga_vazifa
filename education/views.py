@@ -4,24 +4,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, Student
 from .forms import CourseForm, LoginForm, RegisterForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 def home(request):
     students = Student.objects.all()
     context = {
         'title': "Asosiy Sahifa",
-        'students': students
+        'students': students,
     }
-    return render(request, 'index.html', context)
-
-
-def student_detail(request, student_id):
-    student = get_object_or_404(Student, pk=student_id)
-    context = {
-        'student': student,
-        'title': f"{student.course.title}: {student.name}"
-    }
-    return render(request, 'student_detail.html', context)
+    return render(request, 'courses.html', context)
 
 
 def students_by_course(request, course_id):
@@ -35,6 +27,17 @@ def students_by_course(request, course_id):
     return render(request, 'index.html', context)
 
 
+@login_required
+def student_detail(request, student_id):
+    student = get_object_or_404(Student, pk=student_id)
+    context = {
+        'student': student,
+        'title': f"{student.course.title}: {student.name}"
+    }
+    return render(request, 'student_detail.html', context)
+
+
+@login_required
 def course_detail(request, course_id):
     try:
         course = Course.objects.get(pk=course_id)
@@ -47,6 +50,7 @@ def course_detail(request, course_id):
         return render(request, '404.html', status=404)
 
 
+@permission_required('education.add_course', login_url='404')
 def add_course(request):
     if request.method == 'POST':
         form = CourseForm(data=request.POST, files=request.FILES)
@@ -64,6 +68,7 @@ def add_course(request):
     return render(request, 'add_course.html', context)
 
 
+@permission_required('education.change_course', login_url='404')
 def update_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     if request.method == 'POST':
@@ -87,6 +92,7 @@ def update_course(request, course_id):
     return render(request, 'add_course.html', context)
 
 
+@permission_required('education.delete_course', login_url='404')
 def delete_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     if request.method == 'POST':
@@ -151,3 +157,7 @@ def user_logout(request):
     logout(request)
     messages.success(request, "Siz web sahifamizdan chiqib ketdingiz!")
     return redirect('user_login')
+
+
+def error_404(request):
+    return render(request, '404.html', status=404)

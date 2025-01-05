@@ -18,8 +18,13 @@
       <div class="card-body">
           {% if request.user.is_authenticated %}
         <div class="d-flex flex-row-reverse">
+            {% if perms.education.delete_course %}
             <a href="{% url 'delete_course' course.id %}"><i class="fas fa-trash-can"></i></a> &nbsp; &nbsp; &nbsp;
+            {% endif %}
+
+            {% if perms.education.change_course %}
           <a href="{% url 'update_course' course.id %}"><i class="fas fa-pen"></i></a>
+            {% endif %}
       </div>
           {% endif %}
         <a href="{% url 'home' %}">
