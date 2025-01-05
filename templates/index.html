@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block main %}
+
+    <div class="d-flex justify-content-center mb-5">
+        <h3 id="courses">Available Courses</h3>
+    </div>
+    <!--cards-->
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5 px-5">
+            {% all_courses as courses %}
+          {% for course in courses %}
+        <div class="col">
+          <div class="card h-100">
+              {% if course.photo %}
+                  <a href="{% url 'course_detail' course.id %}">
+                        <img src="{{ course.photo.url }}" class="card-img-top" title="{{ course.title }}" alt="courses" data-mdb-tooltip-init/>
+                  </a>
+              {% endif %}
+            <div class="card-body">
+                <a href="{% url 'course_detail' course.id %}">
+                    <h5 class="card-title">{{ course.title }}</h5>
+                </a>
+              <p class="card-text">
+                  <strong>Course:</strong> {{ course.title }} <br>
+                  About: {{ course.description|truncatewords:20 }}
+              </p>
+            </div>
+              <div class="card-footer">
+                <small class="text-muted d-flex justify-content-center">{{ course.created_at }}</small>
+              </div>
+          </div>
+        </div>
+          {% endfor %}
+      </div>
+    <!--cards-->
+
+    <!--students-->
+    <div class="d-flex justify-content-center mb-5">
+        <h3 id="students">Students</h3>
+    </div>
+    <!--students-->
+
+    <!--students card-->
+    <div class="container">
+        <div class="row">
+            {% for student in students %}
+            <div class="col-md-4 mb-4">
+                <div class="card text-center">
+                    <div class="card-header">{{ student.course }}</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ student.name }}</h5>
+                        <p class="card-text"><strong>Email:</strong> {{ student.email }}</p>
+                        <p class="card-text"><strong>Enrolled date:</strong> {{ student.enrolled_at }}</p>
+                        <a href="{% url 'student_detail' student.id %}" class="btn btn-primary" data-mdb-ripple-init>Batafsil</a>
+                    </div>
+                    <div class="card-footer text-muted">{{ student.enrolled_at }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!--students card-->
+
+{% endblock main %}

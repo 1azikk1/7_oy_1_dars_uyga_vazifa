@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block main %}
+
+<!--cards-->
+<div class="row row-cols-1 row-cols-md-12 g-4">
+<div class="col">
+  <div class="card h-100">
+      {% if course.photo %}
+    <img src="{{ course.photo.url }}" class="card-img-top" alt="Courses" title="{{ course.title }}" data-mdb-tooltip-init/>
+      {% endif %}
+    <br>
+      <div class="card-body">
+          {% if request.user.is_authenticated %}
+        <div class="d-flex flex-row-reverse">
+            <a href="{% url 'delete_course' course.id %}"><i class="fas fa-trash-can"></i></a> &nbsp; &nbsp; &nbsp;
+          <a href="{% url 'update_course' course.id %}"><i class="fas fa-pen"></i></a>
+      </div>
+          {% endif %}
+        <a href="{% url 'home' %}">
+            <h5 class="card-title">{{ course.title }}</h5>
+        </a>
+      <p class="card-text">
+          <strong>Name:</strong> {{ course.title }}<br>
+          <strong>Starts from:</strong> {{ course.created_at }} <br>
+          <strong>About:</strong> {{ course.description|linebreaks }}
+      </p>
+    </div>
+    <div class="card-footer d-flex justify-content-around">
+      <small class="text-muted">{{ course.created_at }}</small>
+    </div>
+  </div>
+</div>
+</div>
+<!--cards-->
+<div class="mt-5 d-flex justify-content-center mb-5">
+    <a href="{% url 'home' %} " class="btn btn-outline-primary btn-rounded" data-mdb-ripple-init  data-mdb-ripple-color="dark">
+        Ortga</a>
+</div>
+
+{% endblock main %}

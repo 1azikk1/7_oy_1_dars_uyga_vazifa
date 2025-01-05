@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    {% load my_tags %}
+    <title>
+        {% block title %}
+        {% endblock title %}
+    </title>
+    {% include 'components/_style.html' %}
+</head>
+<body>
+{% include 'components/_navbar.html' %}
+<main>
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger d-flex justify-content-center" role="alert">
+                  {{ error }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger d-flex justify-content-center" role="alert">
+              {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+
+    {% if messages %}
+        <ul class="messages d-flex justify-content-center">
+            {% for message in messages %}
+            <li class="alert alert-{% if message.tags == 'error' %}danger {% else %}{{ message.tags }} {% endif %}" id="unordered_list">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+
+{% block main %}
+{% endblock main %}
+
+    <!-- Back to top button -->
+    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <!-- Back to top button -->
+
+</main>
+
+{% include 'components/_script.html' %}
+{% include 'components/_footer.html' %}
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block main %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-flex justify-content-around">
+        <input type="submit" value="Create" class="btn btn-outline-primary btn-rounded">
+        <a href="{% url 'home' %}" class="btn btn-outline-primary btn-rounded">Cancel</a>
+    </div>
+</form>
+{% endblock main %}
