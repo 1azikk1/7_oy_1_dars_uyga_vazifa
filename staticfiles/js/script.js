@@ -52,3 +52,5 @@ function backToTop() {
 document.body.scrollTop = 0;
 document.documentElement.scrollTop = 0;
 }
+
+//dropdown button for student detail part

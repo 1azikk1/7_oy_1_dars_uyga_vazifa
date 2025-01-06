@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .validators import *
-from .models import Course
+from .models import Course, Student
 
 
 class CourseForm(forms.Form):
@@ -28,6 +28,30 @@ class CourseForm(forms.Form):
         course.description = self.cleaned_data.get('description')
         course.photo = self.cleaned_data.get('photo') if self.cleaned_data.get('photo') else course.photo
         course.save()
+
+
+class StudentForm(forms.Form):
+    name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+        'placeholder': "Talaba ismini kiriting",
+        'class': 'form-control'
+    }))
+    email = forms.EmailField(max_length=100, widget=forms.EmailInput(attrs={
+        'placeholder': "Talaba emailini kiriting",
+        'class': 'form-control'
+    }))
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.Select(attrs={
+        'class': 'form-control'
+    }))
+
+    def create(self):
+        student = Student.objects.create(**self.cleaned_data)
+        return student
+
+    def update(self, student):
+        student.name = self.cleaned_data.get('name')
+        student.email = self.cleaned_data.get('email')
+        student.course = self.cleaned_data.get('course')
+        student.save()
 
 
 class RegisterForm(forms.Form):

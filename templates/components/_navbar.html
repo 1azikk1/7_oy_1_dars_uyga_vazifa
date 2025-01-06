@@ -50,6 +50,12 @@
           <a class="nav-link" href="{% url 'add_course' %}">Kurs qo'shish</a>
         </li>
         {% endif %}
+
+        {% if perms.education.add_student %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'add_student' %}">Talaba qo'shish</a>
+        </li>
+        {% endif %}
       </ul>
       <!-- Left links -->
 

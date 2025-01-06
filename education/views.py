@@ -2,7 +2,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, Student
-from .forms import CourseForm, LoginForm, RegisterForm
+from .forms import CourseForm, LoginForm, RegisterForm, StudentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -161,3 +161,58 @@ def user_logout(request):
 
 def error_404(request):
     return render(request, '404.html', status=404)
+
+
+def add_student(request):
+    if request.method == 'POST':
+        form = StudentForm(data=request.POST)
+        if form.is_valid():
+            student = form.create()
+            messages.success(request, "Talaba muvaffaqiyatli tarzda qo'shildi!")
+            return redirect('home')
+    else:
+        form = StudentForm()
+    context = {
+        'form': form,
+        'title': "Student qo'shish!"
+    }
+    return render(request, 'add_student.html', context)
+
+
+@login_required
+def delete_student(request, student_id):
+    student = get_object_or_404(Student, pk=student_id)
+    if request.method == 'POST':
+        student.delete()
+        messages.success(request, "Talaba muvaffaqiyatli tarzda o'chirildi!")
+        return redirect('home')
+
+    context = {
+        'student': student,
+        'title': "Talabani o'chirish"
+    }
+    messages.warning(request, "Ushbu talabani o'chirib tashlamoqchimisiz?")
+    return render(request, 'delete_confirm_student.html', context)
+
+
+@login_required
+def update_student(request, student_id):
+    student = get_object_or_404(Student, pk=student_id)
+    if request.method == 'POST':
+        form = StudentForm(data=request.POST)
+        if form.is_valid():
+            form.update(student)
+            messages.success(request, "Talaba muvaffaqiyatli tarzda o'zgartirildi")
+            return redirect('student_detail', student_id=student.pk)
+
+    form = StudentForm(initial={
+        'name': student.name,
+        'email': student.email,
+        'course': student.course,
+    })
+
+    context = {
+        'student': student,
+        'form': form
+    }
+    return render(request, 'add_student.html', context)
