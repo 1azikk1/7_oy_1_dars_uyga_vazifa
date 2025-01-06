@@ -39,15 +39,12 @@ def student_detail(request, student_id):
 
 @login_required
 def course_detail(request, course_id):
-    try:
-        course = Course.objects.get(pk=course_id)
-        context = {
-            'course': course,
-            'title': course.description,
-        }
-        return render(request, 'detail.html', context)
-    except:
-        return render(request, '404.html', status=404)
+    course = get_object_or_404(Course, pk=course_id)
+    context = {
+        'course': course,
+        'title': course.description,
+    }
+    return render(request, 'detail.html', context)
 
 
 @permission_required('education.add_course', login_url='404')
